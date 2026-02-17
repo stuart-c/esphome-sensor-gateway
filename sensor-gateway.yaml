@@ -1,0 +1,6 @@
+packages:
+  - !include firmware/core.yaml
+
+substitutions:
+  name: sensor-gateway
+  friendly_name: Sensor Gateway

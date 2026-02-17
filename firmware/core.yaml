@@ -1,0 +1,86 @@
+esphome:
+  name: ${name}
+  friendly_name: ${friendly_name}
+  name_add_mac_suffix: false
+
+preferences:
+  flash_write_interval: 5min
+
+esp32:
+  variant: ESP32S3
+  cpu_frequency: 240MHz
+  flash_size: 16MB
+  framework:
+    type: esp-idf
+
+psram:
+  mode: octal
+  speed: 80MHz
+  ignore_not_found: false
+
+# Enable logging
+logger:
+
+ota:
+  - platform: esphome
+    password: !secret ota_password
+
+api:
+  encryption:
+    key: !secret api_encryption_key
+
+# Ethernet
+ethernet:
+  type: W5500
+  clk_pin: GPIO15
+  mosi_pin: GPIO13
+  miso_pin: GPIO14
+  cs_pin: GPIO16
+  interrupt_pin: GPIO12
+  reset_pin: GPIO39
+
+i2c:
+  sda: GPIO42
+  scl: GPIO41
+
+# I/O Expander
+pca9554:
+  - id: 'tca9554'
+    address: 0x20
+
+# RTC
+time:
+  - platform: pcf85063
+    id: rtc_time
+    update_interval: never
+  - platform: homeassistant
+    on_time_sync:
+      then:
+        - pcf85063.write_time
+
+# Buzzer
+output:
+  - platform: ledc
+    pin: GPIO46
+    id: buzzer_out
+
+rtttl:
+  output: buzzer_out
+  id: buzzer_rtttl
+  gain: 60%
+
+button:
+  - platform: template
+    name: "Buzzer"
+    icon: "mdi:bell-ring"
+    on_press:
+      - rtttl.play: 'long:d=1,o=5,b=100:e6'
+
+# RGB LED
+light:
+  - platform: esp32_rmt_led_strip
+    rgb_order: RGB
+    pin: GPIO38
+    num_leds: 1
+    chipset: ws2812
+    name: "RGB LED"
