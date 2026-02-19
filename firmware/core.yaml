@@ -61,7 +61,9 @@ time:
 # Buzzer
 output:
   - platform: ledc
-    pin: GPIO46
+    pin:
+      number: GPIO46
+      ignore_strapping_warning: true
     id: buzzer_out
 
 rtttl:
