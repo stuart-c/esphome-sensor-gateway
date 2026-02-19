@@ -1,5 +1,6 @@
 packages:
   - !include firmware/core.yaml
+  - !include firmware/water-meters.yaml
 
 substitutions:
   name: sensor-gateway
