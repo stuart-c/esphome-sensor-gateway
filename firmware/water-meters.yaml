@@ -1,0 +1,55 @@
+sensor:
+  - platform: pulse_meter
+    pin:
+      number: GPIO8
+      mode: INPUT_PULLUP
+    name: "Mains Topup Water Meter"
+    unit_of_measurement: "L"
+    total:
+      name: "Total Mains Topup Pulses"
+      disabled_by_default: true
+      entity_category: diagnostic
+
+  - platform: pulse_meter
+    pin:
+      number: GPIO7
+      mode: INPUT_PULLUP
+    name: "Rain Tank Usage Water Meter"
+    unit_of_measurement: "L"
+    total:
+      name: "Total Rain Tank Usage Pulses"
+      disabled_by_default: true
+      entity_category: diagnostic
+
+  - platform: pulse_meter
+    pin:
+      number: GPIO6
+      mode: INPUT_PULLUP
+    name: "Toilets Tank Water Meter"
+    unit_of_measurement: "L"
+    total:
+      name: "Total Toilets Tank Pulses"
+      disabled_by_default: true
+      entity_category: diagnostic
+
+  - platform: pulse_meter
+    pin:
+      number: GPIO5
+      mode: INPUT_PULLUP
+    name: "Washing Machine Water Meter"
+    unit_of_measurement: "L"
+    total:
+      name: "Total Washing Machine Pulses"
+      disabled_by_default: true
+      entity_category: diagnostic
+
+  - platform: pulse_meter
+    pin:
+      number: GPIO4
+      mode: INPUT_PULLUP
+    name: "Outdoor Taps Water Meter"
+    unit_of_measurement: "L"
+    total:
+      name: "Total Outdoor Taps Pulses"
+      disabled_by_default: true
+      entity_category: diagnostic

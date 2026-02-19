@@ -48,3 +48,9 @@ There are two secrets required for the core functionality:
 | -------------------- | ------------- |
 | `ota_password`       | Password for OTA updates |
 | `api_encryption_key` | Encryption key for Home Assistant API communication. Can be generated using the tool on the [Native API Component](https://esphome.io/components/api/#configuration-variables) documentation page |
+
+### Rainwater meters
+
+There is a tank in the back garden which stores water collected from the rear roof. This is then pumped into the house, via filters, for use by the toilets, washing machine and outdoor taps. Additionally the tank is automatically topped up when getting empty using mains water (to prevent it running dry and the toilets failing).
+
+As part of this system there are 5 water meters, each containing a reed relay style magnetic sensor which produces a pulse each time a litre of water is delivered. These are then connected to 5 of the digital inputs, using the built in pull-up resistors.
