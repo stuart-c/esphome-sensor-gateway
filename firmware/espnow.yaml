@@ -1,0 +1,35 @@
+external_components:
+  - source: github://pr#12439
+    components: [espnow]
+    refresh: 1h
+
+espnow:
+  channel: ${espnow_channel}
+  pmk: !secret espnow_master_key
+  on_receive:
+    - then:
+        - lambda: |-
+            char src_mac[MAC_ADDRESS_PRETTY_BUFFER_SIZE];
+            char hex[256];
+            ESP_LOGD("espnow", "Received from %s: %s RSSI: %ddBm",
+                    format_mac_addr_upper(info.src_addr, src_mac),
+                    format_hex_pretty_to(hex, data, size),
+                    info.rx_ctrl->rssi);
+  on_broadcast:
+    - then:
+        - lambda: |-
+            char src_mac[MAC_ADDRESS_PRETTY_BUFFER_SIZE];
+            char hex[256];
+            ESP_LOGD("espnow", "Broadcast from %s: %s RSSI: %ddBm",
+                    format_mac_addr_upper(info.src_addr, src_mac),
+                    format_hex_pretty_to(hex, data, size),
+                    info.rx_ctrl->rssi);
+  on_unknown_peer:
+    - then:
+        - lambda: |-
+            char src_mac[MAC_ADDRESS_PRETTY_BUFFER_SIZE];
+            char hex[256];
+            ESP_LOGD("espnow", "Unknown peer %s sent: %s RSSI: %ddBm",
+                    format_mac_addr_upper(info.src_addr, src_mac),
+                    format_hex_pretty_to(hex, data, size),
+                    info.rx_ctrl->rssi);

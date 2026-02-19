@@ -54,3 +54,15 @@ There are two secrets required for the core functionality:
 There is a tank in the back garden which stores water collected from the rear roof. This is then pumped into the house, via filters, for use by the toilets, washing machine and outdoor taps. Additionally the tank is automatically topped up when getting empty using mains water (to prevent it running dry and the toilets failing).
 
 As part of this system there are 5 water meters, each containing a reed relay style magnetic sensor which produces a pulse each time a litre of water is delivered. These are then connected to 5 of the digital inputs, using the built in pull-up resistors.
+
+### ESP-NOW
+
+The gateway also uses [ESP-NOW](https://docs.espressif.com/projects/esp-idf/en/stable/esp32/api-reference/network/esp_now.html), a simpler lower-power wireless communication system compared to WiFi, to communicate with battery powered sensors. As the gateway is mains powered and communicates via Ethernet it is well suited to connecting these power constrained devices to Home Assistant.
+
+To ensure security the built in encryption is used, via the [pull request](https://github.com/esphome/esphome/pull/12439) created by @robertklep. As well as there being a network wide key each device also has its own key. There is a limit of 17 devices due to ESP32 hardware limitations.
+
+#### Secrets
+
+| Secret Name         | Description   |
+| ------------------- | ------------- |
+| `espnow_master_key` | Master encryption key for whole network. Must be exactly 16 characters |
