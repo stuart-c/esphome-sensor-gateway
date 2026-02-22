@@ -1,0 +1,92 @@
+globals:
+  - id: water_meter_battery_value
+    type: int
+    restore_value: true
+  - id: water_meter_volume_value
+    type: int
+    restore_value: true
+  - id: water_meter_espnow_count_value
+    type: int
+    restore_value: true
+  - id: water_meter_espnow_error_count_value
+    type: int
+    restore_value: true
+
+sensor:
+
+  - platform: template
+    id: water_meter_battery
+    name: "Water Meter Battery"
+    unit_of_measurement: "%"
+    icon: "mdi:battery"
+    state_class: "measurement"
+    device_class: "battery"
+    accuracy_decimals: 0
+    lambda: !lambda 'return id(water_meter_battery_value);'
+    update_interval: 5min
+
+  - platform: template
+    id: water_meter_volume
+    name: "Water Meter Volume"
+    unit_of_measurement: "L"
+    icon: "mdi:water"
+    state_class: "total_increasing"
+    device_class: "water"
+    accuracy_decimals: 0
+    lambda: !lambda 'return id(water_meter_volume_value);'
+    update_interval: 5min
+
+  - platform: template
+    id: water_meter_last_update
+    name: "Water Meter Last Update"
+    icon: "mdi:update"
+    state_class: "measurement"
+    device_class: "timestamp"
+    entity_category: "diagnostic"
+    update_interval: 5min
+
+  - platform: template
+    id: water_meter_espnow_count
+    name: "Water Meter ESP-NOW Count"
+    icon: "mdi:counter"
+    state_class: "total_increasing"
+    entity_category: "diagnostic"
+    disabled_by_default: true
+    accuracy_decimals: 0
+    lambda: !lambda 'return id(water_meter_espnow_count_value);'
+
+  - platform: template
+    id: water_meter_espnow_error_count
+    name: "Water Meter ESP-NOW Error Count"
+    icon: "mdi:counter"
+    state_class: "total_increasing"
+    entity_category: "diagnostic"
+    disabled_by_default: true
+    accuracy_decimals: 0
+    lambda: !lambda 'return id(water_meter_espnow_error_count_value);'
+
+espnow:
+  peers:
+    - address: ${water_meter_mac}
+      lmk: !secret espnow_water_meter_local_key
+  on_receive:
+    - address: ${water_meter_mac}
+      then:
+        - lambda: "id(water_meter_espnow_count_value)++;"
+        - lambda: |-
+            char src_mac[MAC_ADDRESS_PRETTY_BUFFER_SIZE];
+            if (size != 5) {
+              id(water_meter_espnow_error_count_value)++;
+              ESP_LOGE("espnow", "Received data of unexpected size %d from %s",
+                      size, format_mac_addr_upper(info.src_addr, src_mac));
+              return;
+            }
+            int volume = (data[0] << 24) | (data[1] << 16) | (data[2] << 8) | data[3];
+            int battery = data[4];
+
+            id(water_meter_volume_value) = volume;
+            id(water_meter_battery_value) = battery;
+
+            id(water_meter_battery).publish_state(battery);
+            id(water_meter_volume).publish_state(volume);
+            id(water_meter_last_update).publish_state(id(homeassistant_time).now().timestamp);
