@@ -1,7 +1,9 @@
 packages:
   - !include firmware/core.yaml
   - !include firmware/water-meters.yaml
+  - !include firmware/espnow.yaml
 
 substitutions:
   name: sensor-gateway
   friendly_name: Sensor Gateway
+  espnow_channel: 7
