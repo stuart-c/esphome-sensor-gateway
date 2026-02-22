@@ -76,6 +76,7 @@ time:
     id: rtc_time
     update_interval: never
   - platform: homeassistant
+    id: homeassistant_time
     on_time_sync:
       then:
         - pcf85063.write_time

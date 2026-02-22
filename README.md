@@ -61,8 +61,13 @@ The gateway also uses [ESP-NOW](https://docs.espressif.com/projects/esp-idf/en/s
 
 To ensure security the built in encryption is used, via the [pull request](https://github.com/esphome/esphome/pull/12439) created by @robertklep. As well as there being a network wide key each device also has its own key. There is a limit of 17 devices due to ESP32 hardware limitations.
 
+#### Water Meter
+
+One device is a battery powered magnetic pulse sensor connected to the mains water meter. This exposes the volume of water used to Home Assistant.
+
 #### Secrets
 
 | Secret Name         | Description   |
 | ------------------- | ------------- |
 | `espnow_master_key` | Master encryption key for whole network. Must be exactly 16 characters |
+| `espnow_water_meter_local_key` | Local encryption key for water meter device. Must be exactly 16 characters |
